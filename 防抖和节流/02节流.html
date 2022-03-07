@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>节流</title>
+</head>
+<body>
+  <p>节流：在规定的间隔范围内不会重复出发回调，而且大于这个时间间隔才会触发回调，把平凡触发变为少量触发(施法后带CD，CD内无效)</p>
+  <div>
+    <h1>我是计数器<span>0</span></h1>
+    <button>点击我加上1</button>
+  </div>
+</body>
+<script src="./lodash.js"></script>
+<script>
+  // //  获取节点
+  // let span = document.querySelector('span')
+  // let button = document.querySelector('button')
+  // let count = 0
+  // //  1秒以内，计数器的数字最多只能+1
+  // button.onclick = _.throttle(function(){
+  //   // 节流：目前这个回调函数1S执行一次
+  //   // 假如这里面有很多的业务代码，这样可以给浏览器足够的时间去处理
+  //   count++
+  //   span.innerHTML = count
+  //   console.log('count增加了')
+  // }, 1000)
+  //  防抖：用户操作很频繁，但是只能执行一次
+  //  节流：用户操作很频繁，但是把频繁的操作变为少量操作(可以给浏览器足够的时间去处理)
+  //  节流：闭包+延迟器
+  //  手写节流
+  function throttle(func, delay){
+    //  判断容器
+    let task = null
+    //  闭包返回
+    return function(){
+      //  容器为空就设置定时器调用方法
+      //  否则就不响应
+      if(!task){
+        task = setTimeout(() => {
+          //  重置容器状态
+          task = null
+          //  绑定this指向与参数
+          func.apply(this,arguments)
+        },delay)
+      }
+    }
+  }
+  //  使用函数
+  //  获取节点
+  let span = document.querySelector('span')
+  let button = document.querySelector('button')
+  let count = 0
+  //  1秒以内，计数器的数字最多只能+1
+  button.onclick = throttle(function(){
+    // 节流：目前这个回调函数1S执行一次
+    // 假如这里面有很多的业务代码，这样可以给浏览器足够的时间去处理
+    count++
+    span.innerHTML = count
+    console.log('count增加了')
+  }, 1000)
+</script>
+</html>
